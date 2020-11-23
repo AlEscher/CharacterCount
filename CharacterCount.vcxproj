@@ -141,6 +141,9 @@
   <ItemGroup>
     <ClCompile Include="CharacterCount.cpp" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="asm_charcount.asm" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
