@@ -6,7 +6,7 @@
 .CODE             ;Indicates the start of a code segment.
 
 loopstart:	mov dl, byte ptr [edi]          // dl=data[0] 
-			dword ptr [.words+edx*4]    // quantity[char]++
+			inc dword ptr [.words+edx*4]    // quantity[char]++
 			inc eax
 			cmp  0, [eax]
 			jne loopstart
