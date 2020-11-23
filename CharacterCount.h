@@ -5,12 +5,12 @@
 
 class CharacterCount
 {
-private:
+public:
 	int countMap[256];
 public:
 	// Scans the given (null-terminated) buffer string and updates the countMap
 	bool CountChars(const unsigned char* buffer);
-	std::ostringstream PrintToStream();
+	std::ostringstream PrintToStream(int* countMap);
 };
 
 static std::vector<unsigned char> encodingTable = {
@@ -22,5 +22,9 @@ static std::vector<unsigned char> encodingTable = {
 			'o', 'p', 'q', 'r', 's', 't', 'u', 'v',
 			'w', 'x', 'y', 'z', '0', '1', '2', '3',
 			'4', '5', '6', '7', '8', '9' };
+
+// Assembly stuff
+int asmCountMap[256];
+int* AsmCountChars(const unsigned char* buffer);
 
 extern CharacterCount* g_CharCount;
