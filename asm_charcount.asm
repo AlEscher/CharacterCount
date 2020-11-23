@@ -2,7 +2,7 @@
 .global asm_charcount
 
 .DATA             ;Create a near data segment.  Local variables are declared after
-	.words	DD 256 DUP(0)
+	.words:	.zero 1024
 .CODE             ;Indicates the start of a code segment.
 
 loopstart:	mov dl, byte ptr [edi]          // dl=data[0] 
