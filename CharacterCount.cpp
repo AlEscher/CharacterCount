@@ -3,6 +3,7 @@
 #include "CharacterCount.h"
 
 CharacterCount* g_CharCount = nullptr;
+int* asmCountMap = nullptr;
 
 
 bool CharacterCount::CountChars(const unsigned char* buffer)
@@ -31,10 +32,10 @@ __declspec(naked) int* AsmCountChars(const unsigned char* buffer)
 {
 	__asm
 	{
-		mov dl, byte ptr[buffer]          // dl=data[0] 
+		loopstart: mov dl, byte ptr[buffer]          // dl=data[0] 
 		inc dword ptr[asmCountMap + edx * 4]    // quantity[char]++
 		inc eax
-		cmp  0, byte ptr[eax]
+		cmp  byte ptr[eax], 0
 		jne loopstart
 		mov eax, asmCountMap
 	}

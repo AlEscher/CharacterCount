@@ -1,5 +1,8 @@
 #pragma once
 
+#ifndef CHAR_COUNT
+
+#define CHAR_COUNT
 #include <sstream>
 #include <vector>
 
@@ -24,7 +27,9 @@ static std::vector<unsigned char> encodingTable = {
 			'4', '5', '6', '7', '8', '9' };
 
 // Assembly stuff
-int asmCountMap[256];
 int* AsmCountChars(const unsigned char* buffer);
+extern int* asmCountMap;
 
 extern CharacterCount* g_CharCount;
+
+#endif // CHAR_COUNT
