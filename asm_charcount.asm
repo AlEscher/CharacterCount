@@ -1,0 +1,6 @@
+_DATA SEGMENT
+	word_array b words 256
+_DATA ENDS
+_TEXT SEGMENT
+_TEXT ENDS
+END
