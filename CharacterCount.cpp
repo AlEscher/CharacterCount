@@ -28,15 +28,14 @@ std::ostringstream CharacterCount::PrintToStream(int* countMap)
 	return stream;
 }
 
-__declspec(naked) int* AsmCountChars(const unsigned char* buffer)
+__declspec(naked) void AsmCountChars(const unsigned char* buffer)
 {
 	__asm
 	{
 		loopstart: mov dl, byte ptr[buffer]          // dl=data[0] 
 		inc dword ptr[asmCountMap + edx * 4]    // quantity[char]++
-		inc eax
-		cmp  byte ptr[eax], 0
+		inc buffer
+		cmp  byte ptr[buffer], 0
 		jne loopstart
-		mov eax, asmCountMap
 	}
 }
