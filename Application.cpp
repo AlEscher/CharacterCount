@@ -4,11 +4,13 @@
 #include "CharacterCount.h"
 #include "Application.h"
 
+using namespace std;
+
 int main(int argc, char* argv[], char* envp[])
 {
 	g_CharCount = new CharacterCount();
-	std::string inputParam = "";
-	std::string outputParam = "";
+	string inputParam = "";
+	string outputParam = "";
 	InputType inputType = InputType::FILE;
 	OutputType outputType = OutputType::CONSOLE;
 
@@ -20,56 +22,57 @@ int main(int argc, char* argv[], char* envp[])
 	// Read and parse input
 	if (inputType == InputType::FILE)
 	{
-		std::ifstream input;
-		input.open(inputParam, std::ios::in);
+		ifstream input;
+		input.open(inputParam, ios::in);
 		if (input.fail())
 		{
 			char buffer[1024];
 			strerror_s(buffer, errno);
-			std::cout << "Couldn't open input file: " << buffer << std::endl;
+			cout << "Couldn't open input file: " << buffer << endl;
 			return -1;
 		}
 
-		std::string inputText = "";
+		string inputText = "";
 		input >> inputText;
 
-		g_CharCount->CountChars(reinterpret_cast<const unsigned char*>(inputText.c_str()));
+		unsigned const char* inputBuf = reinterpret_cast<const unsigned char*>(inputText.c_str());
+		g_CharCount->CountChars(inputBuf);
 	}
 
-	std::ostringstream outputStream = g_CharCount->PrintToStream(g_CharCount->countMap);
+	ostringstream outputStream = g_CharCount->PrintToStream(g_CharCount->countMap);
 
 	if (outputType == OutputType::CONSOLE)
 	{
-		std::cout << outputStream.str() << std::endl;
+		cout << outputStream.str() << endl;
 	}
 	else if (outputType == OutputType::FILE)
 	{
-		std::ofstream output;
-		output.open(outputParam, std::ios::trunc);
+		ofstream output;
+		output.open(outputParam, ios::trunc);
 		if (output.fail())
 		{
 			char buffer[1024];
 			strerror_s(buffer, errno);
-			std::cout << "Couldn't open output file: " << buffer << std::endl;
+			cout << "Couldn't open output file: " << buffer << endl;
 			return -1;
 		}
 
-		output << outputStream.str() << std::endl;
+		output << outputStream.str() << endl;
 	}
 
-	std::cout << "Finished successfully!" << std::endl;
+	cout << "Finished successfully!" << endl;
 
 	delete g_CharCount;
-	int ret = std::getchar();
+	int ret = getchar();
 
 	return 0;
 }
 
-std::string GetProgramName(std::string pathToProgram)
+string GetProgramName(const string& pathToProgram)
 {
-	std::string programName = "";
-	std::vector<std::string> elements;
-	std::istringstream f(pathToProgram);
+	string programName = "";
+	vector<string> elements;
+	istringstream f(pathToProgram);
 	// Get program name from command line argument containing program path
 	while (getline(f, programName, '\\'))
 	{
@@ -78,30 +81,30 @@ std::string GetProgramName(std::string pathToProgram)
 	return programName;
 }
 
-void PrintHelp(std::string pathToProgram)
+void PrintHelp(const string& pathToProgram)
 {
-	std::string programName = GetProgramName(pathToProgram);
+	string programName = GetProgramName(pathToProgram);
 
-	std::cout << "CharCounter usage:" << std::endl;
-	std::cout << "\t* -input : The following argument(s) specify the input type" << std::endl;
-	std::cout << "\t*\t-f   : The following argument specifies the path to an input file" << std::endl;
-	std::cout << "\t*\t-url : The following argument specifies the URL to a text document for input" << std::endl;
-	std::cout << "\t*\tcb   : Take input from the clip board" << std::endl;
-	std::cout << "\t* -output : The following argument(s) specifies the output type" << std::endl;
-	std::cout << "\t*\tpc : Print output to the console" << std::endl;
-	std::cout << "\t*\t-f : The following argument specifies the path to an output file" << std::endl;
-	std::cout << "\t*" << std::endl;
-	std::cout << "\t* Examples: " << std::endl;
-	std::cout << "\t- .\\" << programName << " -input -f C:/Path/To/Input.txt" << std::endl;
-	std::cout << "\t- .\\" << programName << " -input -f C:/Path/To/Input.txt -output -f C:/Path/To/Output.txt" << std::endl;
-	std::cout << "\t- .\\" << programName << " -output pc -input cb" << std::endl;
+	cout << "CharCounter usage:" << endl;
+	cout << "\t* -input : The following argument(s) specify the input type" << endl;
+	cout << "\t*\t-f   : The following argument specifies the path to an input file" << endl;
+	cout << "\t*\t-url : The following argument specifies the URL to a text document for input" << endl;
+	cout << "\t*\tcb   : Take input from the clip board" << endl;
+	cout << "\t* -output : The following argument(s) specifies the output type" << endl;
+	cout << "\t*\tpc : Print output to the console" << endl;
+	cout << "\t*\t-f : The following argument specifies the path to an output file" << endl;
+	cout << "\t*" << endl;
+	cout << "\t* Examples: " << endl;
+	cout << "\t- .\\" << programName << " -input -f C:/Path/To/Input.txt" << endl;
+	cout << "\t- .\\" << programName << " -input -f C:/Path/To/Input.txt -output -f C:/Path/To/Output.txt" << endl;
+	cout << "\t- .\\" << programName << " -output pc -input cb" << endl;
 
-	int ret = std::getchar();
+	int ret = getchar();
 }
 
-bool ParseCommandLineArgs(int argc, char* argv[], std::string& inputParam, InputType& inputType, std::string& outputParam, OutputType& outputType)
+bool ParseCommandLineArgs(int argc, char* argv[], string& inputParam, InputType& inputType, string& outputParam, OutputType& outputType)
 {
-	std::vector<std::string> arguments;
+	vector<string> arguments;
 
 	// Collect command line arguments into vector
 	for (int i = 0; i < argc; i++)
@@ -116,17 +119,17 @@ bool ParseCommandLineArgs(int argc, char* argv[], std::string& inputParam, Input
 	}
 
 	// Look for input and output type
-	std::vector<std::string>::iterator inputPosition = std::find(arguments.begin(), arguments.end(), "-input");
-	std::vector<std::string>::iterator outputPosition = std::find(arguments.begin(), arguments.end(), "-output");
+	const vector<string>::iterator inputPosition = find(arguments.begin(), arguments.end(), "-input");
+	const vector<string>::iterator outputPosition = find(arguments.begin(), arguments.end(), "-output");
 	if (inputPosition == arguments.end())
 	{
-		std::cout << "No input type specified!" << std::endl;
+		cout << "No input type specified!" << endl;
 		PrintHelp(GetProgramName(arguments[0]));
 		return false;
 	}
 	else
 	{
-		unsigned int inputIndex = std::distance(arguments.begin(), inputPosition);
+		unsigned int inputIndex = distance(arguments.begin(), inputPosition);
 
 		// Start parsing input parameters
 		// First parameter should always be the input type, followed by e.g. a path
@@ -146,13 +149,13 @@ bool ParseCommandLineArgs(int argc, char* argv[], std::string& inputParam, Input
 		}
 		else if (inputIndex + 1 < arguments.size())
 		{
-			std::cout << "Couldn't parse input parameters!" << std::endl;
+			cout << "Couldn't parse input parameters!" << endl;
 			PrintHelp(GetProgramName(arguments[0]));
 			return false;
 		}
 		else
 		{
-			std::cout << "Not enough input parameters!" << std::endl;
+			cout << "Not enough input parameters!" << endl;
 			PrintHelp(GetProgramName(arguments[0]));
 			return false;
 		}
@@ -164,7 +167,7 @@ bool ParseCommandLineArgs(int argc, char* argv[], std::string& inputParam, Input
 		}
 
 		// Otherwise start parsing output parameters
-		unsigned int outputIndex = std::distance(arguments.begin(), outputPosition);
+		unsigned int outputIndex = distance(arguments.begin(), outputPosition);
 
 		if (outputIndex + 2 < arguments.size() && arguments[outputIndex + 1] == "-f")
 		{
@@ -177,13 +180,13 @@ bool ParseCommandLineArgs(int argc, char* argv[], std::string& inputParam, Input
 		}
 		else if (outputIndex + 1 < arguments.size())
 		{
-			std::cout << "Unknown output type \"" << arguments[outputIndex + 1] << "!" << std::endl;
+			cout << "Unknown output type \"" << arguments[outputIndex + 1] << "!" << endl;
 			PrintHelp(GetProgramName(arguments[0]));
 			return false;
 		}
 		else
 		{
-			std::cout << "Not enough output parameters!" << std::endl;
+			cout << "Not enough output parameters!" << endl;
 			PrintHelp(GetProgramName(arguments[0]));
 			return false;
 		}
